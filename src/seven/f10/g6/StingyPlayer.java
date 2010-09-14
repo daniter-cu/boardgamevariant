@@ -13,6 +13,7 @@ public class StingyPlayer implements Player {
 
 	static final Word[] wordlist;
 	// my comment!
+	//more
 	static {
 		BufferedReader r;
 		String line = null;
