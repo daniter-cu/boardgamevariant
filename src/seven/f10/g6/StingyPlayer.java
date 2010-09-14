@@ -1,4 +1,6 @@
-package seven.f10.g6;
+/*package seven.f10.g6;
+
+DON'T USE THIS ONE!
 
 import java.util.ArrayList;
 import java.io.*;
@@ -91,3 +93,4 @@ public class StingyPlayer implements Player {
 	}
 
 }
+*/
