@@ -58,9 +58,9 @@ public class InitialPlayer implements Player {
 		if (PlayerBidList.isEmpty()) {
 			cachedBids = PlayerBidList;
 		}
-
+		
 		if (null == currentLetters) {
-			currentLetters = new ArrayList<Character>(7);
+			currentLetters = new ArrayList<Character>(25);
 			ourID = PlayerID;
 			for (Letter l : secretstate.getSecretLetters()) {
 				currentLetters.add(l.getAlphabet());
@@ -70,6 +70,66 @@ public class InitialPlayer implements Player {
 				checkBid(cachedBids.get(cachedBids.size() - 1));
 			}
 		}
+		
+		/*
+		 * Get statistics for bidding price
+		 */
+		//call a priori on current letters
+		
+		String[] letlist = new String[currentLetters.size()+1];
+		int i = 0;
+		int maxscore = 0;
+		int numwords = 0;
+		for(Character c: currentLetters)
+		{
+			letlist[i] = c.toString();
+			i++;
+		}
+		letlist[letlist.length -1] = bidLetter.getAlphabet().toString();
+		LetterSet ls = (LetterSet) mine.getCachedItemSet(letlist);
+		if(null != ls)
+		{
+			String[] words = ls.getWords();
+			l.error("Itemset ["+ls.getKey()+"] has "+ words.length + "associated words:\n");
+			numwords = words.length;
+			for (String w : words) {
+				//System.out.println(w);
+				//l.error(w);
+				Word wd = new Word(w);
+				if(wd.score > maxscore)
+					maxscore = wd.score;
+			}
+		} 
+		else 
+		{
+			l.error("nothing found");
+		}
+		
+		
+		//current word possible
+		char c[] = new char[currentLetters.size()];
+		for (int j = 0; j < c.length; j++) {
+			c[j] = currentLetters.get(j);
+		}
+		String s = new String(c);
+		Word ourletters = new Word(s);
+		Word bestword = new Word("");
+		for (Word w : wordlist) {
+			if (ourletters.contains(w)) {
+				if (w.score > bestword.score) {
+					bestword = w;
+				}
+			}
+		}
+		int maxcur = bestword.score;
+		
+		l.error("our stats:");
+		l.error("current word value: " + maxcur);
+		l.error("possible words max: " + maxscore);
+		l.error("# 7 letter words: " + numwords); 
+		/*
+		 * End statistics calculation.
+		 */
 
 		return 0;
 	}
@@ -108,8 +168,8 @@ public class InitialPlayer implements Player {
 
 	public String returnWord() {
 		checkBid(cachedBids.get(cachedBids.size() - 1));
-		char c[] = new char[7];
-		for (int i = 0; i < 7; i++) {
+		char c[] = new char[currentLetters.size()];
+		for (int i = 0; i < c.length; i++) {
 			c[i] = currentLetters.get(i);
 		}
 		String s = new String(c);
@@ -120,7 +180,6 @@ public class InitialPlayer implements Player {
 				if (w.score > bestword.score) {
 					bestword = w;
 				}
-
 			}
 		}
 		currentLetters = null;
