@@ -51,6 +51,7 @@ public class InitialPlayer implements Player {
 	ArrayList<Character> currentLetters;
 	private int ourID;
 	private ArrayList<PlayerBids> cachedBids;
+	private int currentPoint;
 
 	public int Bid(Letter bidLetter, ArrayList<PlayerBids> PlayerBidList,
 			int total_rounds, ArrayList<String> PlayerList,
@@ -137,6 +138,16 @@ public class InitialPlayer implements Player {
 	private void checkBid(PlayerBids b) {
 		if (ourID == b.getWinnerID()) {
 			currentLetters.add(b.getTargetLetter().getAlphabet());
+			//deduct point from bidding. Amount = second highest point
+			//find amount of second highest bid.
+			int secondBid = 0;
+			for(int i = 0;i<b.getBidvalues().size();i++){
+				if(secondBid<b.getBidvalues().get(i)){
+					secondBid = b.getBidvalues().get(i);
+				}
+			}
+			//deduct point
+			currentPoint = currentPoint-secondBid;
 		}
 	}
 
