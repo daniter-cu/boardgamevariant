@@ -108,17 +108,28 @@ public class InitialPlayer implements Player {
 		
 		
 		//current word possible
-		char c[] = new char[currentLetters.size()];
-		for (int j = 0; j < c.length; j++) {
+		int wbidcur =0;
+		char c[] = new char[currentLetters.size()+1];
+		for (int j = 0; j < c.length-1; j++) {
 			c[j] = currentLetters.get(j);
 		}
 		String s = new String(c);
+		s.trim();
+		c[c.length-1] = bidLetter.getAlphabet();
+		String s1 = new String(c);
 		Word ourletters = new Word(s);
+		Word otherletters = new Word(s1);
 		Word bestword = new Word("");
+		Word bestalt = new Word("");
 		for (Word w : wordlist) {
 			if (ourletters.contains(w)) {
 				if (w.score > bestword.score) {
 					bestword = w;
+				}
+			}
+			if (otherletters.contains(w)) {
+				if (w.score > bestalt.score) {
+					wbidcur = w.score;
 				}
 			}
 		}
@@ -126,6 +137,7 @@ public class InitialPlayer implements Player {
 		
 		l.error("our stats:");
 		l.error("current word value: " + maxcur);
+		l.error("current word with bid letter value: " + wbidcur);
 		l.error("possible words max: " + maxscore);
 		l.error("# 7 letter words: " + numwords); 
 		/*
