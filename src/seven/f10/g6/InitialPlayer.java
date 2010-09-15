@@ -52,6 +52,7 @@ public class InitialPlayer implements Player {
 	private int ourID;
 	private ArrayList<PlayerBids> cachedBids;
 	private int currentPoint;
+	private int spentPoint;
 
 	public int Bid(Letter bidLetter, ArrayList<PlayerBids> PlayerBidList,
 			int total_rounds, ArrayList<String> PlayerList,
@@ -135,16 +136,34 @@ public class InitialPlayer implements Player {
 		}
 		int maxcur = bestword.score;
 		
+		//points for the bid letter
+		int point=0;
+		if (numwords>= 5)
+		{
+			if(1 == 1){
+				point = (int)((50+wbidcur-spentPoint)/(7-currentLetters.size()));
+			}else{
+				point = 0;
+			}
+			
+		}else{
+			point = 0;
+		}
+		
+		
 		l.error("our stats:");
 		l.error("current word value: " + maxcur);
 		l.error("current word with bid letter value: " + wbidcur);
 		l.error("possible words max: " + maxscore);
 		l.error("# 7 letter words: " + numwords); 
+		l.error("points already spent: " + spentPoint);
+		l.error("Points for the bid letter: " + point);
+		
 		/*
 		 * End statistics calculation.
 		 */
 
-		return 0;
+		return point;
 	}
 
 	private void checkBid(PlayerBids b) {
@@ -160,6 +179,7 @@ public class InitialPlayer implements Player {
 			}
 			//deduct point
 			currentPoint = currentPoint-secondBid;
+			spentPoint +=b.getWinAmmount(); 
 		}
 	}
 
