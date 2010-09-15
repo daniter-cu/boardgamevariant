@@ -47,6 +47,7 @@ public class GameConfig {
 		
 		for (int loop = 0; loop < PlayerList.size(); loop++) {
 			Player ptemp = ioc.getPObject(PlayerList.get(loop));
+			ptemp.Register();
 			PObjectList.add(ptemp);
 		}
 

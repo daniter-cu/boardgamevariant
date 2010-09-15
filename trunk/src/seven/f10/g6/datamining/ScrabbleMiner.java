@@ -1,12 +1,12 @@
-package seven.g4.datamining;
+package seven.f10.g6.datamining;
 
 import java.util.Arrays;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import seven.g4.datamining.DataMine.ItemSet;
-import seven.g4.datamining.LetterMine.LetterSet;
+import seven.f10.g6.datamining.DataMine.ItemSet;
+import seven.f10.g6.datamining.LetterMine.LetterSet;
 
 public class ScrabbleMiner {
 	static {
