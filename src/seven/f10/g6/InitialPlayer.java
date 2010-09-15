@@ -1,6 +1,7 @@
 package seven.f10.g6;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.*;
 
 import seven.ui.Letter;
@@ -8,13 +9,27 @@ import seven.ui.Player;
 import seven.ui.PlayerBids;
 import seven.ui.SecretState;
 
+import seven.f10.g6.datamining.DataMine;
+import seven.f10.g6.datamining.LetterMine;
+import seven.f10.g6.datamining.DataMine.ItemSet;
+import seven.f10.g6.datamining.LetterMine.LetterSet;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 public class InitialPlayer implements Player {
 
-
+	static {
+		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(org.apache.log4j.Level.ERROR);
+	}
+	protected Logger l = Logger.getLogger(this.getClass());
 	static final Word[] wordlist;
 	// my comment!
 	//more
+	DataMine mine = null;
 	static {
+		
 		BufferedReader r;
 		String line = null;
 		ArrayList<Word> wtmp = new ArrayList<Word>(55000);
@@ -66,7 +81,29 @@ public class InitialPlayer implements Player {
 	}
 
 	public void Register() {
-		// no-op
+
+		l.error("Success");
+		mine = new LetterMine("src/seven/g4/datamining/7letterWords.txt");
+		mine.buildIndex();
+		ItemSet[] answer = mine.aPriori(0.000001);
+		/*LetterSet i = (LetterSet) mine.getCachedItemSet(new String[]{"A","C","D","L"});
+		//System.out.println("alive and well: " + answer.length + " itemsets total");
+		l.error("done.");
+		if (null != i) {
+			String[] words = i.getWords();
+			System.out.format(
+					"Itemset [%s] has %d associated words:\n",
+					new Object[]{i.getKey(), words.length}
+			);
+			l.error("Itemset ["+i.getKey()+"] has "+ words.length + "associated words:\n");
+			for (String w : words) {
+				//System.out.println(w);
+				l.error(w);
+			}
+		} else {
+			l.error("nothing found?");
+			System.out.println("None, sorry.");
+		}*/
 	}
 
 	public String returnWord() {
