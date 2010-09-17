@@ -31,7 +31,7 @@ public class InitialPlayer implements Player {
 	//more
 	//DataMine mine = null;
 	static {
-
+		
 		BufferedReader r;
 		String line = null;
 		ArrayList<Word> wtmp = new ArrayList<Word>(55000);
@@ -54,8 +54,8 @@ public class InitialPlayer implements Player {
 		}
 		wordlist = wtmp.toArray(new Word[wtmp.size()]);
 		sevenletterwordlist = temp2.toArray(new Word[temp2.size()]);
-
-
+		
+		
 	}
 
 	ArrayList<Character> currentLetters;
@@ -68,8 +68,8 @@ public class InitialPlayer implements Player {
 			SecretState secretstate, int PlayerID) {
 		if (PlayerBidList.isEmpty()) {
 			cachedBids = PlayerBidList;
-		}//???
-
+		}
+		
 		if (null == currentLetters) {
 			currentLetters = new ArrayList<Character>(25);
 			ourID = PlayerID;
@@ -81,12 +81,77 @@ public class InitialPlayer implements Player {
 				checkBid(cachedBids.get(cachedBids.size() - 1));
 			}
 		}
-
-		if(currentPoint<= 30){
-			return 0;
-		}else{
-			return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist,cachedBids);
+		
+		/*
+		 * Get statistics for bidding price
+		 */
+		//IGNORED!!
+		//call a priori on current letters
+		/*
+		String[] letlist = new String[currentLetters.size()+1];
+		int i = 0;
+		int maxscore = 0;
+		int numwords = 0;
+		for(Character c: currentLetters)
+		{
+			letlist[i] = c.toString();
+			i++;
 		}
+		letlist[letlist.length -1] = bidLetter.getAlphabet().toString();
+		LetterSet ls = (LetterSet) mine.getCachedItemSet(letlist);
+		if(null != ls)
+		{
+			String[] words = ls.getWords();
+			l.error("Itemset ["+ls.getKey()+"] has "+ words.length + "associated words:\n");
+			numwords = words.length;
+			for (String w : words) {
+				//System.out.println(w);
+				//l.error(w);
+				Word wd = new Word(w);
+				if(wd.score > maxscore)
+					maxscore = wd.score;
+			}
+		} 
+		else 
+		{
+			l.error("nothing found");
+		}
+		/*
+		//commit
+		//current word possible
+		char c[] = new char[currentLetters.size()];
+		for (int j = 0; j < c.length; j++) {
+			c[j] = currentLetters.get(j);
+		}
+		String s = new String(c);
+		Word ourletters = new Word(s);
+		Word bestword = new Word("");
+		for (Word w : wordlist) {
+			if (ourletters.contains(w)) {
+				if (w.score > bestword.score) {
+					bestword = w;
+				}
+			}
+		}
+		int maxcur = bestword.score;
+		
+		l.error("our stats:");
+		l.error("current word value: " + maxcur);
+		l.error("possible words max: " + maxscore);
+		l.error("# 7 letter words: " + numwords); 
+		/*
+		 * End statistics calculation.
+		 */
+		//Ignore below
+		/*
+		int currentBid = 0;
+		if(currentPoint == 0)
+			currentBid = 0;
+		else
+			currentBid = currentPoint - (maxscore/currentPoint);
+		l.error("Bid: " + currentBid);
+		*/
+		return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist, cachedBids);
 	}
 
 	private void checkBid(PlayerBids b) {
@@ -107,10 +172,10 @@ public class InitialPlayer implements Player {
 
 	public void Register() {
 
-		//	l.error("Success");
-		//	mine = new LetterMine("src/seven/g4/datamining/7letterWords.txt");
-		//	mine.buildIndex();
-		//	ItemSet[] answer = mine.aPriori(0.000001);
+	//	l.error("Success");
+	//	mine = new LetterMine("src/seven/g4/datamining/7letterWords.txt");
+	//	mine.buildIndex();
+	//	ItemSet[] answer = mine.aPriori(0.000001);
 		/*LetterSet i = (LetterSet) mine.getCachedItemSet(new String[]{"A","C","D","L"});
 		//System.out.println("alive and well: " + answer.length + " itemsets total");
 		l.error("done.");
@@ -149,9 +214,6 @@ public class InitialPlayer implements Player {
 		}
 		currentLetters = null;
 		currentPoint += bestword.score;
-		if(bestword.length == 7){
-			currentPoint += 50;
-		}
 		return bestword.word;
 	}
 
