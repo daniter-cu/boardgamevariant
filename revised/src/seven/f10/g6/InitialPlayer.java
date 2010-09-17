@@ -25,9 +25,10 @@ public class InitialPlayer implements Player {
 	}
 	protected Logger l = Logger.getLogger(this.getClass());
 	static final Word[] wordlist;
+	BidBuilder Bid = new BidBuilder();
 	// my comment!
 	//more
-	DataMine mine = null;
+	//DataMine mine = null;
 	static {
 		
 		BufferedReader r;
@@ -75,8 +76,9 @@ public class InitialPlayer implements Player {
 		/*
 		 * Get statistics for bidding price
 		 */
+		//IGNORED!!
 		//call a priori on current letters
-		
+		/*
 		String[] letlist = new String[currentLetters.size()+1];
 		int i = 0;
 		int maxscore = 0;
@@ -105,7 +107,7 @@ public class InitialPlayer implements Player {
 		{
 			l.error("nothing found");
 		}
-		
+		/*
 		//commit
 		//current word possible
 		char c[] = new char[currentLetters.size()];
@@ -131,14 +133,16 @@ public class InitialPlayer implements Player {
 		/*
 		 * End statistics calculation.
 		 */
-
+		//Ignore below
+		/*
 		int currentBid = 0;
 		if(currentPoint == 0)
 			currentBid = 0;
 		else
 			currentBid = currentPoint - (maxscore/currentPoint);
 		l.error("Bid: " + currentBid);
-		return currentBid;
+		*/
+		return Bid.bid();
 	}
 
 	private void checkBid(PlayerBids b) {
@@ -159,10 +163,10 @@ public class InitialPlayer implements Player {
 
 	public void Register() {
 
-		l.error("Success");
-		mine = new LetterMine("src/seven/g4/datamining/7letterWords.txt");
-		mine.buildIndex();
-		ItemSet[] answer = mine.aPriori(0.000001);
+	//	l.error("Success");
+	//	mine = new LetterMine("src/seven/g4/datamining/7letterWords.txt");
+	//	mine.buildIndex();
+	//	ItemSet[] answer = mine.aPriori(0.000001);
 		/*LetterSet i = (LetterSet) mine.getCachedItemSet(new String[]{"A","C","D","L"});
 		//System.out.println("alive and well: " + answer.length + " itemsets total");
 		l.error("done.");

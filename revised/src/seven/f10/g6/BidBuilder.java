@@ -17,6 +17,7 @@ public class BidBuilder {
 	
 	public int distance()
 	{
+		//implement check to call make7() instead.
 		return 0;
 	}
 	
