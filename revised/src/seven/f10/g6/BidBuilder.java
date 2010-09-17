@@ -58,10 +58,11 @@ public class BidBuilder {
 		else 
 			return distance( bidLetter, letters, wordlist, slwl);
 			*/
-		return distance( bidLetter, letters, wordlist, slwl);
+		return distance( bidLetter, letters, wordlist, slwl, cachedBids, currentPoint, ourID);
 	}
 	
-	private int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl)
+	private int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl, ArrayList<PlayerBids> cb,
+			int cp, int id)
 	{
 		double sum = 0;
 		//for each word
@@ -71,12 +72,12 @@ public class BidBuilder {
 			//if so send to make7()
 			if(w.length == 7)
 			{	
-				/*
-				int b = make7(null, null, null, null, 0, 0);
+				
+				int b = make7(bidLetter, letters, cb, w, cp, id);
 				//if near 7, bid return val
 				if(b != 0)
 					return b;
-					*/
+				
 			}
 	
 			//get percentage
