@@ -28,18 +28,18 @@ public class BidBuilder {
 		if(have7)
 			return 0;
 		else if (near7)
-			return make7();
+			return make7(bidLetter, letters, wordlist);
 		else 
-			return distance();
+			return distance( bidLetter, letters, wordlist);
 	}
 	
-	public int distance()
+	public int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist)
 	{
 		//implement check to call make7() instead.
 		return 0;
 	}
 	
-	public int make7()
+	public int make7(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist)
 	{
 		return 0;
 	}
