@@ -5,15 +5,25 @@ public class BidBuilder {
 	/**
 	 * Create BidBuilder object
 	 */
+	private boolean near7;
+	private boolean have7;
+	
 	public BidBuilder()
 	{
+		near7 = have7 = false;
 		//no-op
 	}
 	
 	public int bid()
 	{
 		//bid zero if we have 7.
-		return 0;
+		if(have7)
+			return 0;
+		else if (near7)
+			return make7();
+		else 
+			return distance();
+		
 	}
 	
 	public int distance()
