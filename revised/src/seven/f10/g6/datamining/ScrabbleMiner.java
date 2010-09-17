@@ -20,7 +20,7 @@ public class ScrabbleMiner {
 	 * @param args the letters (all caps) in the set to look at.
 	 */
 	
-	
+	//test
 	public static void main(String[] args) {
 		Logger l = Logger.getLogger(ScrabbleMiner.class);
 		DataMine mine = null;
