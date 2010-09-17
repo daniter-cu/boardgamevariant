@@ -17,8 +17,7 @@ public class BidBuilder {
 	/**
 	 * Create BidBuilder object
 	 */
-	private boolean near7;
-	private boolean have7;
+
 	private double value;
 	private double posval;
 	
@@ -30,9 +29,14 @@ public class BidBuilder {
 	
 	public BidBuilder()
 	{
-		near7 = have7 = false;
+		//near7 = have7 = false;
 		
 		//no-op
+	}
+	
+	public void reset()
+	{
+		value = 0;
 	}
 	
 	public void wonletter()

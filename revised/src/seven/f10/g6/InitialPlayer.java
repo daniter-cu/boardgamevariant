@@ -214,6 +214,7 @@ public class InitialPlayer implements Player {
 			}
 		}
 		currentLetters = null;
+		Bid.reset();
 		currentPoint += bestword.score;
 		return bestword.word;
 	}
