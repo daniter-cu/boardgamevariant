@@ -151,7 +151,7 @@ public class InitialPlayer implements Player {
 			currentBid = currentPoint - (maxscore/currentPoint);
 		l.error("Bid: " + currentBid);
 		*/
-		return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist, cachedBids);
+		return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist, cachedBids,currentPoint,ourID);
 	}
 
 	private void checkBid(PlayerBids b) {
