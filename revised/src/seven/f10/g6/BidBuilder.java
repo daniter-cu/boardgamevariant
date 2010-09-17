@@ -1,5 +1,13 @@
 package seven.f10.g6;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import seven.ui.Letter;
+import seven.ui.Player;
+import seven.ui.PlayerBids;
+import seven.ui.SecretState;
+
 public class BidBuilder {
 
 	/**
@@ -14,7 +22,7 @@ public class BidBuilder {
 		//no-op
 	}
 	
-	public int bid()
+	public int bid(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist)
 	{
 		//bid zero if we have 7.
 		if(have7)
@@ -23,7 +31,6 @@ public class BidBuilder {
 			return make7();
 		else 
 			return distance();
-		
 	}
 	
 	public int distance()
