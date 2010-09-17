@@ -25,6 +25,7 @@ public class InitialPlayer implements Player {
 	}
 	protected Logger l = Logger.getLogger(this.getClass());
 	static final Word[] wordlist;
+	static final Word[] sevenletterwordlist;
 	BidBuilder Bid = new BidBuilder();
 	// my comment!
 	//more
@@ -34,10 +35,15 @@ public class InitialPlayer implements Player {
 		BufferedReader r;
 		String line = null;
 		ArrayList<Word> wtmp = new ArrayList<Word>(55000);
+		ArrayList<Word> temp2 = new ArrayList<Word>(27000);
 		try {
 			r = new BufferedReader(new FileReader("src/textFiles/super-small-wordlist.txt"));
 			while (null != (line = r.readLine())) {
 				wtmp.add(new Word(line.trim()));
+			}
+			r = new BufferedReader(new FileReader("src/textFiles/7letterWords.txt"));
+			while (null != (line = r.readLine())) {
+				temp2.add(new Word(line.trim()));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -47,6 +53,9 @@ public class InitialPlayer implements Player {
 			e.printStackTrace();
 		}
 		wordlist = wtmp.toArray(new Word[wtmp.size()]);
+		sevenletterwordlist = temp2.toArray(new Word[temp2.size()]);
+		
+		
 	}
 
 	ArrayList<Character> currentLetters;
@@ -142,7 +151,7 @@ public class InitialPlayer implements Player {
 			currentBid = currentPoint - (maxscore/currentPoint);
 		l.error("Bid: " + currentBid);
 		*/
-		return Bid.bid(bidLetter, currentLetters, wordlist);
+		return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist);
 	}
 
 	private void checkBid(PlayerBids b) {
