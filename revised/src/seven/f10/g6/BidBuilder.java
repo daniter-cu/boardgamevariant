@@ -12,6 +12,7 @@ public class BidBuilder {
 	
 	public int bid()
 	{
+		//bid zero if we have 7.
 		return 0;
 	}
 	
