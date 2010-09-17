@@ -34,7 +34,7 @@ public class InitialPlayer implements Player {
 		String line = null;
 		ArrayList<Word> wtmp = new ArrayList<Word>(55000);
 		try {
-			r = new BufferedReader(new FileReader("src/seven/g1/super-small-wordlist.txt"));
+			r = new BufferedReader(new FileReader("src/textFiles/super-small-wordlist.txt"));
 			while (null != (line = r.readLine())) {
 				wtmp.add(new Word(line.trim()));
 			}
@@ -51,6 +51,7 @@ public class InitialPlayer implements Player {
 	ArrayList<Character> currentLetters;
 	private int ourID;
 	private ArrayList<PlayerBids> cachedBids;
+	private int currentPoint = 100;
 
 	public int Bid(Letter bidLetter, ArrayList<PlayerBids> PlayerBidList,
 			int total_rounds, ArrayList<String> PlayerList,
@@ -105,7 +106,7 @@ public class InitialPlayer implements Player {
 			l.error("nothing found");
 		}
 		
-		
+		//commit
 		//current word possible
 		char c[] = new char[currentLetters.size()];
 		for (int j = 0; j < c.length; j++) {
@@ -131,12 +132,28 @@ public class InitialPlayer implements Player {
 		 * End statistics calculation.
 		 */
 
-		return 0;
+		int currentBid = 0;
+		if(currentPoint == 0)
+			currentBid = 0;
+		else
+			currentBid = currentPoint - (maxscore/currentPoint);
+		l.error("Bid: " + currentBid);
+		return currentBid;
 	}
 
 	private void checkBid(PlayerBids b) {
 		if (ourID == b.getWinnerID()) {
 			currentLetters.add(b.getTargetLetter().getAlphabet());
+			//deduct point from bidding. Amount = second highest point
+			//find amount of second highest bid.
+			int secondBid = 0;
+			for(int i = 0;i<b.getBidvalues().size();i++){
+				if(secondBid<b.getBidvalues().get(i)){
+					secondBid = b.getBidvalues().get(i);
+				}
+			}
+			//deduct point
+			currentPoint = currentPoint-secondBid;
 		}
 	}
 
@@ -183,6 +200,7 @@ public class InitialPlayer implements Player {
 			}
 		}
 		currentLetters = null;
+		currentPoint += bestword.score;
 		return bestword.word;
 	}
 
