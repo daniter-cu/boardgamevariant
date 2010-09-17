@@ -85,7 +85,7 @@ public class InitialPlayer implements Player {
 		if(currentPoint<= 30){
 			return 0;
 		}else{
-			return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist);
+			return Bid.bid(bidLetter, currentLetters, wordlist, sevenletterwordlist,cachedBids);
 		}
 	}
 
