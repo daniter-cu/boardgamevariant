@@ -3,6 +3,9 @@ package seven.f10.g6;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import seven.ui.Letter;
 import seven.ui.Player;
 import seven.ui.PlayerBids;
@@ -16,6 +19,14 @@ public class BidBuilder {
 	 */
 	private boolean near7;
 	private boolean have7;
+	private double value;
+	private double posval;
+	
+	static {
+		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(org.apache.log4j.Level.DEBUG);
+	}
+	protected Logger l = Logger.getLogger(this.getClass());
 	
 	public BidBuilder()
 	{
@@ -24,9 +35,15 @@ public class BidBuilder {
 		//no-op
 	}
 	
+	public void wonletter()
+	{
+		value = posval;
+	}
+	
 	public int bid(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl,
 			ArrayList<PlayerBids> cachedBids,int currentPoint, int ourID)
 	{
+		/*
 		//bid zero if we have 7.
 		if(have7)
 			return 0;
@@ -40,15 +57,47 @@ public class BidBuilder {
 
 		else 
 			return distance( bidLetter, letters, wordlist, slwl);
+			*/
+		return distance( bidLetter, letters, wordlist, slwl);
 	}
 	
-	public int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl)
+	private int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl)
 	{
-		//implement check to call make7() instead.
-		return 0;
+		double sum = 0;
+		//for each word
+		for(Word w: wordlist)
+		{
+			//check if word is 7 letters
+			//if so send to make7()
+			if(w.length == 7)
+			{	
+				/*
+				int b = make7(null, null, null, null, 0, 0);
+				//if near 7, bid return val
+				if(b != 0)
+					return b;
+					*/
+			}
+	
+			//get percentage
+			//add percentage to total
+			double prct = getPercentage(w, letters, bidLetter);
+			sum += prct;
+		}
+		l.debug("word search complete");
+		//get % difference
+		double pdiff;
+		if (value != 0)
+			pdiff = (sum - value) / value;
+		else
+			pdiff = 0.5;
+		//multiply sum by 10
+		posval = sum;
+		l.debug("BID " + Math.round(pdiff *10));
+		return (int) Math.round(pdiff * 10);
 	}
 	
-	public int make7(Letter bidLetter, ArrayList<Character> letters, 
+	private int make7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
 		
@@ -123,5 +172,48 @@ public class BidBuilder {
 		}
 		
 	}
+	
+	private double getPercentage(Word w, ArrayList<Character> letters, Letter bidletter)
+	{
+		double total = w.length;
+		double found = 0;
+		ArrayList<Integer> usedletters = new ArrayList<Integer>(7);
+		Character[] lets = letters.toArray(new Character[letters.size()+1]);
+		lets[lets.length-1] = bidletter.getAlphabet();
+		
+		for(Character c: lets)
+		{
+			String word = w.word;
+			int r = word.indexOf(c, 0);
+			if(r==-1)
+			{
+				continue;
+			}
+			else
+			{
+				if(!usedletters.contains(r))
+				{
+					
+					usedletters.add(r);
+					found++;
+				}
+				else
+				{
+					while(usedletters.contains(r) || r != -1)
+					{
+						r = word.indexOf(c, r+1);
+					}
+					if(r!=-1)
+					{
+						usedletters.add(r);
+						found++;
+					}
+				}
+			}
+		}
+		
+		return (found/total);
+	}
+
 	
 }

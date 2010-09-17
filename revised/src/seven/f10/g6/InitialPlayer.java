@@ -160,6 +160,7 @@ public class InitialPlayer implements Player {
 			//deduct point from bidding. Amount = second highest point
 			//find amount of second highest bid.
 			int secondBid = 0;
+			Bid.wonletter();
 			for(int i = 0;i<b.getBidvalues().size();i++){
 				if(secondBid<b.getBidvalues().get(i)){
 					secondBid = b.getBidvalues().get(i);
