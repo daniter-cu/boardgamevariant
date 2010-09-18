@@ -130,23 +130,28 @@ public class BidBuilder {
 		else{
 			//2. See if these word is in sevenWord, if not return 0.
 			//not all letters have to be in sevenWord
-			int found = 0;
+			//Bug: duplicate letters
+//			int found = 0;
+//			
+//			for(int j=0;j<determiningLetter.size();j++){
+//				
+//				for(int i = 0; i<sevenWord.word.length();i++){
+//					
+//					if(determiningLetter.get(j).equals(sevenWord.word.charAt(i))){
+//						
+//						found++;
+//						
+//					}
+//					
+//				}
+//				
+//			}
 			
-			for(int j=0;j<determiningLetter.size();j++){
-				
-				for(int i = 0; i<sevenWord.word.length();i++){
-					
-					if(determiningLetter.get(j).equals(sevenWord.word.charAt(i))){
-						
-						found++;
-						
-					}
-					
-				}
-				
-			}
+			//using Dan's percentage function.
 			
-			if(found<5){
+			double percent = getPercentage(sevenWord,letters,bidLetter);
+			
+			if(percent<(5.0/7.0)){
 				
 				return 0;
 				
@@ -166,7 +171,7 @@ public class BidBuilder {
 				int pointsLeft = points-pointPlayed;
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
-				return ((int)getPercentage(sevenWord,letters,bidLetter)*pointsLeft)/points;
+				return (int)(percent*pointsLeft)/points;
 				
 			}
 			
