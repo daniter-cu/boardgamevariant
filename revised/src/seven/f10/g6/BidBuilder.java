@@ -65,6 +65,20 @@ public class BidBuilder {
 		return distance( bidLetter, letters, wordlist, slwl, cachedBids, currentPoint, ourID);
 	}
 	
+	public void setHidden( ArrayList<Character> letters, Word[] wordlist)
+	{
+		double sum = 0;
+		//for each word
+		for(Word w: wordlist)
+		{
+			//get percentage
+			//add percentage to total
+			double prct = getPercentage(w, letters, null);
+			sum += prct;
+		}
+		value = sum;		
+	}
+	
 	private int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl, ArrayList<PlayerBids> cb,
 			int cp, int id)
 	{
@@ -76,12 +90,10 @@ public class BidBuilder {
 			//if so send to make7()
 			if(w.length == 7)
 			{	
-				
 				int b = make7(bidLetter, letters, cb, w, cp, id);
 				//if near 7, bid return val
 				if(b != 0)
 					return b;
-				
 			}
 	
 			//get percentage
@@ -184,8 +196,16 @@ public class BidBuilder {
 		double total = w.length;
 		double found = 0;
 		ArrayList<Integer> usedletters = new ArrayList<Integer>(7);
-		Character[] lets = letters.toArray(new Character[letters.size()+1]);
-		lets[lets.length-1] = bidletter.getAlphabet();
+		Character[] lets;
+		if(bidletter != null)
+		{
+			lets = letters.toArray(new Character[letters.size()+1]);
+			lets[lets.length-1] = bidletter.getAlphabet();
+		}
+		else
+		{
+			lets = letters.toArray(new Character[letters.size()]);
+		}
 		
 		for(Character c: lets)
 		{

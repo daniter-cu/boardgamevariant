@@ -76,6 +76,7 @@ public class InitialPlayer implements Player {
 			for (Letter l : secretstate.getSecretLetters()) {
 				currentLetters.add(l.getAlphabet());
 			}
+			Bid.setHidden(currentLetters, wordlist);
 		} else {
 			if (cachedBids.size() > 0) {
 				checkBid(cachedBids.get(cachedBids.size() - 1));
