@@ -90,7 +90,7 @@ public class GameController {
             // Validate and change scores:
             validateAndScore(gc_local);
 
-
+            gc_local.num_leters_done = 0;
             // Get the word from each, calculate score, store words in history
             // Also make a new wordbag
             gc_local.ScrabbleObject.initBag();
