@@ -176,14 +176,18 @@ public class BidBuilder {
 				int pointPlayed = 0;
 				for(int i = 0;i<cachedBids.size();i++){
 					
-					pointPlayed += cachedBids.get(i).getBidvalues().get(ourID);
+					if(cachedBids.get(i).getWinnerID()==ourID){
+						
+						pointPlayed += cachedBids.get(i).getBidvalues().get(ourID);
+						
+					}
 					
 				}
 				//5. Calculate how much point we have left for bidding and not going to lose point in the end.
 				int pointsLeft = points-pointPlayed;
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
-				return (int)(percent*pointsLeft)/points;
+				return (int)(percent*pointsLeft);
 				
 			}
 			
