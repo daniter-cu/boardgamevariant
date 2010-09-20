@@ -187,7 +187,16 @@ public class BidBuilder {
 				int pointsLeft = points-pointPlayed;
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
-				return (int)(percent*pointsLeft);
+				
+				if(pointsLeft<=currentPoint){
+					
+					return (int)(percent*pointsLeft);
+					
+				}else{
+					
+					return (int)(percent*(currentPoint));
+					
+				}
 				
 			}
 			
