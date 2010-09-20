@@ -163,15 +163,13 @@ public class BidBuilder {
 			
 			double percent = getPercentage(sevenWord,letters,bidLetter);
 			
-			if(percent<(5.0/7.0)){
+			if(percent<(6.0/7.0)){
 				
 				return 0;
 				
 			}else{
-				//2.1. determine points you will get in 7-letter word.
+				//use getWordScore to calculate word score
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
-				//3. Plus 50 points bonus into calculation
-				points += 50;
 				//4. determine how much bids we have played so far.
 				int pointPlayed = 0;
 				for(int i = 0;i<cachedBids.size();i++){
@@ -188,13 +186,17 @@ public class BidBuilder {
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
 				
-				if(pointsLeft<=currentPoint){
+				if(pointsLeft<0){
+					
+					return 0;
+					
+				}else if(pointsLeft<=currentPoint){
 					
 					return (int)(percent*pointsLeft);
 					
 				}else{
 					
-					return (int)(percent*(currentPoint));
+					return (int)(percent*currentPoint);
 					
 				}
 				
