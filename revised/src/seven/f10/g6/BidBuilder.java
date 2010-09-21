@@ -167,7 +167,7 @@ public class BidBuilder {
 				
 				return 0;
 				
-			}else{
+			}else if(percent<1){
 				//use getWordScore to calculate word score
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
 				//4. determine how much bids we have played so far.
@@ -199,6 +199,10 @@ public class BidBuilder {
 					return (int)(percent*currentPoint);
 					
 				}
+				
+			}else{
+				// if we already gather all the letters in 7-letter word, we will randomly bid as 1-2 points.
+				return (int)Math.random()*2;
 				
 			}
 			
