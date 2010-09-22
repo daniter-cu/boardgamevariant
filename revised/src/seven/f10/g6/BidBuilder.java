@@ -172,11 +172,27 @@ public class BidBuilder {
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
 				//4. determine how much bids we have played so far.
 				int pointPlayed = 0;
+				int secondHighBid = 0;
 				for(int i = 0;i<cachedBids.size();i++){
 					
 					if(cachedBids.get(i).getWinnerID()==ourID){
 						
-						pointPlayed += cachedBids.get(i).getBidvalues().get(ourID);
+						for(int j = 0;j<cachedBids.get(i).getBidvalues().size();j++){
+							
+							if(j==ourID){
+								
+								continue;
+								
+							}else if(secondHighBid<cachedBids.get(i).getBidvalues().get(j)){
+								
+								secondHighBid = cachedBids.get(i).getBidvalues().get(j);
+								
+							}
+							
+						}
+						
+						pointPlayed += secondHighBid;
+						secondHighBid = 0;
 						
 					}
 					
@@ -185,6 +201,10 @@ public class BidBuilder {
 				int pointsLeft = points-pointPlayed;
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
+				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
+				double valueOfMissingLetters = points-getScoreFromCurrentLetter(sevenWord,letters);
+				double missingLetterScore = valueOfMissingLetters-50-bidLetterScore;
+				double bidMultiplier = (bidLetterScore*valueOfMissingLetters)/missingLetterScore;
 				
 				if(pointsLeft<0){
 					
@@ -192,11 +212,11 @@ public class BidBuilder {
 					
 				}else if(pointsLeft<=currentPoint){
 					
-					return (int)(percent*pointsLeft);
+					return (int)bidMultiplier;
 					
 				}else{
 					
-					return (int)(percent*currentPoint);
+					return (int)((bidMultiplier*currentPoint)/valueOfMissingLetters);
 					
 				}
 				
@@ -208,6 +228,48 @@ public class BidBuilder {
 			
 		}
 		
+	}
+
+	// adapt from Dan's getPercentage function.
+	private double getScoreFromCurrentLetter(Word w, ArrayList<Character> letters)
+	{
+		double score = 0;
+		ArrayList<Integer> usedletters = new ArrayList<Integer>(7);
+		Character[] lets;
+		lets = letters.toArray(new Character[letters.size()]);
+		
+		for(Character c: lets)
+		{
+			String word = w.word;
+			int r = word.indexOf(c, 0);
+			if(r==-1)
+			{
+				continue;
+			}
+			else
+			{
+				if(!usedletters.contains(r))
+				{
+					
+					usedletters.add(r);
+					score += ScrabbleValues.letterScore(c);
+				}
+				else
+				{
+					while(usedletters.contains(r) || r != -1)
+					{
+						r = word.indexOf(c, r+1);
+					}
+					if(r!=-1)
+					{
+						usedletters.add(r);
+						score += ScrabbleValues.letterScore(c);
+					}
+				}
+			}
+		}
+		
+		return score;
 	}
 	
 	private double getPercentage(Word w, ArrayList<Character> letters, Letter bidletter)
