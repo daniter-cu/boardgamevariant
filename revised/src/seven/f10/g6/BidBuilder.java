@@ -32,6 +32,7 @@ public class BidBuilder {
 		//near7 = have7 = false;
 		
 		//no-op
+
 	}
 	
 	public void reset()
@@ -163,36 +164,23 @@ public class BidBuilder {
 			
 			double percent = getPercentage(sevenWord,letters,bidLetter);
 			
-			if(percent<(6.0/7.0)){
-				
-				return 0;
-				
-			}else if(percent<1){
+			if((percent<=1)&&(percent>=(6.0/7.0))){
 				//use getWordScore to calculate word score
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
 				//4. determine how much bids we have played so far.
 				int pointPlayed = 0;
 				int secondHighBid = 0;
 				for(int i = 0;i<cachedBids.size();i++){
-					
-					if(cachedBids.get(i).getWinnerID()==ourID){
-						
+
+					if (ourID == cachedBids.get(i).getWinnerID()) {
+						secondHighBid = 0;
 						for(int j = 0;j<cachedBids.get(i).getBidvalues().size();j++){
-							
-							if(j==ourID){
-								
-								continue;
-								
-							}else if(secondHighBid<cachedBids.get(i).getBidvalues().get(j)){
-								
+							if(secondHighBid<cachedBids.get(i).getBidvalues().get(j)){
 								secondHighBid = cachedBids.get(i).getBidvalues().get(j);
-								
 							}
-							
 						}
 						
 						pointPlayed += secondHighBid;
-						secondHighBid = 0;
 						
 					}
 					
@@ -205,23 +193,19 @@ public class BidBuilder {
 				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50-bidLetterScore;
 				double bidMultiplier = bidLetterScore/missingLetterScore;
 				
-				if(pointsLeft<0){
-					
-					return 0;
-					
-				}else if(pointsLeft<=currentPoint){
+				if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
 					
 					return (int)bidMultiplier*pointsLeft;
 					
 				}else{
 					
-					return (int)bidMultiplier*currentPoint;
+					return 0;
 					
 				}
 				
 			}else{
-				// if we already gather all the letters in 7-letter word, we will randomly bid as 1-2 points.
-				return (int)Math.random()*2;
+				// if we already gather all the letters in 7-letter word.
+				return 0;
 				
 			}
 			
