@@ -205,7 +205,7 @@ public class BidBuilder {
 				
 			}else{
 				// if we already gather all the letters in 7-letter word.
-				return 0;
+				return 2;
 				
 			}
 			
