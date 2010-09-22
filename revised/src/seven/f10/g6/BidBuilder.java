@@ -164,7 +164,7 @@ public class BidBuilder {
 			
 			double percent = getPercentage(sevenWord,letters,bidLetter);
 			
-			if((percent<=1)&&(percent>=(6.0/7.0))){
+			if((percent>=(6.0/7.0))){
 				//use getWordScore to calculate word score
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
 				//4. determine how much bids we have played so far.
