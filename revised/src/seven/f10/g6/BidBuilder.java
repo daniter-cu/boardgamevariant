@@ -202,9 +202,8 @@ public class BidBuilder {
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
 				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
-				double valueOfMissingLetters = points-getScoreFromCurrentLetter(sevenWord,letters);
-				double missingLetterScore = valueOfMissingLetters-50-bidLetterScore;
-				double bidMultiplier = (bidLetterScore*valueOfMissingLetters)/missingLetterScore;
+				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50-bidLetterScore;
+				double bidMultiplier = bidLetterScore/missingLetterScore;
 				
 				if(pointsLeft<0){
 					
@@ -212,11 +211,11 @@ public class BidBuilder {
 					
 				}else if(pointsLeft<=currentPoint){
 					
-					return (int)bidMultiplier;
+					return (int)bidMultiplier*pointsLeft;
 					
 				}else{
 					
-					return (int)((bidMultiplier*currentPoint)/valueOfMissingLetters);
+					return (int)bidMultiplier*currentPoint;
 					
 				}
 				
