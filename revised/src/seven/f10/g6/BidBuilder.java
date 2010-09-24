@@ -20,6 +20,8 @@ public class BidBuilder {
 
 	private double value;
 	private double posval;
+	private boolean have7;
+	private char seventh;
 	
 	static {
 		BasicConfigurator.configure();
@@ -35,14 +37,20 @@ public class BidBuilder {
 
 	}
 	
+	
+	
 	public void reset()
 	{
 		value = 0;
+		have7 = false;
 	}
 	
 	public void wonletter()
 	{
 		value = posval;
+		//add code to check if we got our make 7er
+		//if(got a)
+		//	have7 = true;
 	}
 	
 	public int bid(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl,
@@ -303,6 +311,16 @@ public class BidBuilder {
 		}
 		
 		return (found/total);
+	}
+	
+	public int have7()
+	{
+		return 0;
+	}
+	
+	public int initialBid()
+	{
+		return 0;
 	}
 
 	
