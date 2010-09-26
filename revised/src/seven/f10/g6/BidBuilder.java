@@ -153,15 +153,26 @@ public class BidBuilder {
 			//not all letters have to be in sevenWord			
 			//using Dan's percentage function.
 			
+			double currentPercent = getPercentage(sevenWord,letters,null);
+			
+			have7 = false;
+			
+			if(currentPercent==1){
+				
+				have7 = true;
+				
+			}
+			
 			double percent = getPercentage(sevenWord,letters,bidLetter);
 			
-			if(percent<(4.0/7.0)){
+			if(percent<(5.0/7.0)){
 				
 				return 0;
 				
 			}
 			
-			else if(percent>(4.0/7.0)){
+			else if((percent>=(5.0/7.0))&&!have7){
+				
 				//use getWordScore to calculate word score
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
 				int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
@@ -182,9 +193,9 @@ public class BidBuilder {
 				}
 				
 			}else{
-				// if we already gather all the letters in 7-letter word.
+					
 				return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
-				
+
 			}
 			
 		}
@@ -318,10 +329,11 @@ public class BidBuilder {
 			
 			return 0;
 			
-		}else if (currentPercent<1){
+		}else if (currentPercent<(5.0/7.0)){
 			
 			int pointsLeft = getPointLeft(bidLetter,letters, cachedBids, sevenWord, currentPoint,ourID);
 			int points = ScrabbleValues.getWordScore(sevenWord.word);
+			
 			if(pointsLeft<=points){
 				
 				return 0;
