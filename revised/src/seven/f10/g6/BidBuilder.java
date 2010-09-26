@@ -150,51 +150,21 @@ public class BidBuilder {
 			return 0;
 		else{
 			//2. See if these word is in sevenWord, if not return 0.
-			//not all letters have to be in sevenWord
-			//Bug: duplicate letters
-//			int found = 0;
-//			
-//			for(int j=0;j<determiningLetter.size();j++){
-//				
-//				for(int i = 0; i<sevenWord.word.length();i++){
-//					
-//					if(determiningLetter.get(j).equals(sevenWord.word.charAt(i))){
-//						
-//						found++;
-//						
-//					}
-//					
-//				}
-//				
-//			}
-			
+			//not all letters have to be in sevenWord			
 			//using Dan's percentage function.
 			
 			double percent = getPercentage(sevenWord,letters,bidLetter);
 			
-			if((percent>=(6.0/7.0))){
+			if(percent<(4.0/7.0)){
+				
+				return 0;
+				
+			}
+			
+			else if(percent>(4.0/7.0)){
 				//use getWordScore to calculate word score
 				int points = ScrabbleValues.getWordScore(sevenWord.word);
-				//4. determine how much bids we have played so far.
-				int pointPlayed = 0;
-				int secondHighBid = 0;
-				for(int i = 0;i<cachedBids.size();i++){
-
-					if (ourID == cachedBids.get(i).getWinnerID()) {
-						secondHighBid = 0;
-						for(int j = 0;j<cachedBids.get(i).getBidvalues().size();j++){
-							if(secondHighBid<cachedBids.get(i).getBidvalues().get(j)){
-								secondHighBid = cachedBids.get(i).getBidvalues().get(j);
-							}
-						}
-						
-						pointPlayed += secondHighBid;
-						
-					}
-					
-				}
-				//5. Calculate how much point we have left for bidding and not going to lose point in the end.
-				int pointsLeft = points-pointPlayed;
+				int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
 				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
@@ -213,7 +183,7 @@ public class BidBuilder {
 				
 			}else{
 				// if we already gather all the letters in 7-letter word.
-				return 2;
+				return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 				
 			}
 			
@@ -221,6 +191,33 @@ public class BidBuilder {
 		
 	}
 
+	private int getPointLeft(Letter bidLetter, ArrayList<Character> letters, 
+			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID){
+		
+		int points = ScrabbleValues.getWordScore(sevenWord.word);
+		//4. determine how much bids we have played so far.
+		int pointPlayed = 0;
+		int secondHighBid = 0;
+		for(int i = 0;i<cachedBids.size();i++){
+
+			if (ourID == cachedBids.get(i).getWinnerID()) {
+				secondHighBid = 0;
+				for(int j = 0;j<cachedBids.get(i).getBidvalues().size();j++){
+					if(secondHighBid<cachedBids.get(i).getBidvalues().get(j)){
+						secondHighBid = cachedBids.get(i).getBidvalues().get(j);
+					}
+				}
+				
+				pointPlayed += secondHighBid;
+				
+			}
+			
+		}
+		//5. Calculate how much point we have left for bidding and not going to lose point in the end.
+		return points-pointPlayed;
+		
+	}
+	
 	// adapt from Dan's getPercentage function.
 	private double getScoreFromCurrentLetter(Word w, ArrayList<Character> letters)
 	{
@@ -313,9 +310,44 @@ public class BidBuilder {
 		return (found/total);
 	}
 	
-	public int have7()
+	public int have7(Letter bidLetter, ArrayList<Character> letters, 
+			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
-		return 0;
+		double currentPercent = getPercentage(sevenWord,letters,null);
+		if(currentPercent==1){
+			
+			return 0;
+			
+		}else if (currentPercent<1){
+			
+			int pointsLeft = getPointLeft(bidLetter,letters, cachedBids, sevenWord, currentPoint,ourID);
+			int points = ScrabbleValues.getWordScore(sevenWord.word);
+			if(pointsLeft<=points){
+				
+				return 0;
+				
+			}else{
+				
+				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
+				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50-bidLetterScore;
+				double bidMultiplier = bidLetterScore/missingLetterScore;
+				
+				if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
+					
+					return (int)bidMultiplier*pointsLeft;
+					
+				}else{
+					
+					return 0;
+					
+				}
+				
+			}
+		}else{
+			
+			return 0;
+			
+		}
 	}
 	
 	public int initialBid()
