@@ -11,6 +11,8 @@ import seven.ui.Player;
 import seven.ui.PlayerBids;
 import seven.ui.SecretState;
 import seven.ui.ScrabbleValues;
+import seven.ui.GameEngine;	
+
 
 public class BidBuilder {
 
@@ -22,7 +24,7 @@ public class BidBuilder {
 	private double posval;
 	private boolean have7;
 	private char seventh;
-	
+	private static int failTime=-1;
 	static {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(org.apache.log4j.Level.DEBUG);
@@ -114,13 +116,14 @@ public class BidBuilder {
 		//get % difference
 		double pdiff;
 		if (value != 0)
-			pdiff = (sum - value) / value;
-		else
-			pdiff = 0.5;
+			{pdiff = (sum - value) / value;
 		//multiply sum by 10
 		posval = sum;
 		l.debug("BID " + Math.round(pdiff *10));
 		return (int) Math.round(pdiff * 10);
+		}else{
+			return initialBid(bidLetter, wordlist);
+		}
 	}
 	
 	private int make7(Letter bidLetter, ArrayList<Character> letters, 
@@ -362,10 +365,45 @@ public class BidBuilder {
 		}
 	}
 	
-	public int initialBid()
+
+	//ArrayList<String> playernames = iocontroller.getPlayerList()
+	public int initialBid(Letter bidLetter, Word[] wordlist)
 	{
-		return 0;
+		if(value == 0){
+			int sum = 1;
+			int total = wordlist.length;
+			failTime +=1;
+
+			for(Word w: wordlist)
+			{
+				int r= w.word.indexOf(bidLetter.getAlphabet());
+				if(w.length == 7 && r!= -1)
+				{	
+					sum++;
+				}
+			}
+			l.debug("sum: "+sum);
+			l.debug("total:"+total);
+			double FreqIn7 = (double)sum/total;
+			l.debug(FreqIn7);
+			int bidPrice = (int)Math.ceil(FreqIn7 * bidLetter.getValue());
+			int playerNum = GameEngine.iocontroller.getPlayerList().size();
+			if(failTime < playerNum){
+				return (bidPrice*4);
+			}else if(failTime < (int)Math.round(1.5*playerNum)){return 
+
+(bidLetter.getValue()* 6);
+			}else {return (bidLetter.getValue()+7);
+			}
+			
+		}else {
+			return 0;
+ 		}
+		
 	}
 
-	
+
 }
+
+	
+
