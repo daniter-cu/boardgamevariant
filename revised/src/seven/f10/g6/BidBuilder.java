@@ -115,12 +115,12 @@ public class BidBuilder {
 		l.debug("word search complete");
 		//get % difference
 		double pdiff;
-		if (value != 0)
-			{pdiff = (sum - value) / value;
+			pdiff = (sum - value) / value;
 		//multiply sum by 10
 		posval = sum;
 		l.debug("BID " + Math.round(pdiff *10));
-		return (int) Math.round(pdiff * 10);
+		if (value != 0){
+			return (int) Math.round(pdiff * 10);
 		}else{
 			return initialBid(bidLetter, wordlist);
 		}
