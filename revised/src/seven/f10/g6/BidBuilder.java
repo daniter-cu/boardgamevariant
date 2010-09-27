@@ -24,7 +24,7 @@ public class BidBuilder {
 	private double posval;
 	private boolean have7;
 	private char seventh;
-	private static int failTime=-1;
+	private int failTime=-1;
 	static {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(org.apache.log4j.Level.DEBUG);
@@ -332,24 +332,28 @@ public class BidBuilder {
 		if(value == 0){
 			int sum = 1;
 			int total = InitialPlayer.sevenletterwordlist.length;
+			l.debug(total);
 			failTime +=1;
 
 			for(Word w: InitialPlayer.sevenletterwordlist)
 			{
 				int r= w.word.indexOf(bidLetter.getAlphabet());
-				if(w.length == 7 && r!= -1)
+				if(r!= -1)
 				{	
 					sum++;
 				}
 			}
+			l.debug(sum);
 			double FreqIn7 = (double)sum/total;
-			int bidPrice = (int)Math.ceil(FreqIn7 * bidLetter.getValue());
+			l.debug(FreqIn7);
+			int bidPrice = (int)Math.ceil(FreqIn7*10 + bidLetter.getValue());
 			int playerNum = GameEngine.iocontroller.getPlayerList().size();
-			if(failTime < playerNum){
-				return (bidPrice*4);
-			}else if(failTime < (int)Math.round(1.5*playerNum)){
-				return (bidLetter.getValue()* 6);
-			}else {return (bidLetter.getValue()+7);
+			l.debug("playerNum: "+playerNum);
+			l.debug("failTime: "+failTime);
+			if(failTime <= playerNum){
+				return (bidPrice);
+			}else {
+				return (bidLetter.getValue()+7);
 			}
 			
 		}else {
