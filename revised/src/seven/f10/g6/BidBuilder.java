@@ -175,7 +175,7 @@ public class BidBuilder {
 				double bidMultiplier = bidLetterScore/missingLetterScore;
 				
 				if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
-					int x = (int)bidMultiplier*pointsLeft;
+					int x = (int)(bidMultiplier*pointsLeft);
 //					if( (x > 18) && (percent < 1))
 //						return 10;
 //					else if (x > 18)
