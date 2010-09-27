@@ -141,7 +141,7 @@ public class BidBuilder {
 		}
 		else
 		{
-			int i = initialBid(bidLetter, wordlist);
+			int i = initialBid(bidLetter);
 			l.debug("Initialbid bids : " + i);
 			return i;
 		}
@@ -327,14 +327,14 @@ public class BidBuilder {
 	
 
 	//ArrayList<String> playernames = iocontroller.getPlayerList()
-	public int initialBid(Letter bidLetter, Word[] wordlist)
+	public int initialBid(Letter bidLetter)
 	{
 		if(value == 0){
 			int sum = 1;
-			int total = wordlist.length;
+			int total = InitialPlayer.sevenletterwordlist.length;
 			failTime +=1;
 
-			for(Word w: wordlist)
+			for(Word w: InitialPlayer.sevenletterwordlist)
 			{
 				int r= w.word.indexOf(bidLetter.getAlphabet());
 				if(w.length == 7 && r!= -1)
