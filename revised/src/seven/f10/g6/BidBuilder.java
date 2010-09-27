@@ -101,6 +101,7 @@ public class BidBuilder {
 		
 		double sum = 0;
 		//for each word
+		int altbid = 0;
 		for(Word w: wordlist)
 		{
 			//check if word is 7 letters
@@ -109,11 +110,8 @@ public class BidBuilder {
 			{	
 				int b = make7(bidLetter, letters, cb, w, cp, id);
 				//if near 7, bid return val
-				if(b != 0)
-				{
-					l.debug("Make7() made bid of : " +b);
-					return b;
-				}
+				if(b > altbid)
+					altbid = b;
 			}
 	
 			//get percentage
@@ -130,6 +128,10 @@ public class BidBuilder {
 			pdiff = (sum - value) / value;
 		//multiply sum by 10
 		posval = sum;
+		
+		if(altbid != 0)
+			return altbid;
+		
 		if (value != 0)
 		{
 			if(pdiff < 1)
