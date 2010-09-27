@@ -150,57 +150,19 @@ public class BidBuilder {
 	private int make7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
-		
-		//determine bid price that doesn't exceed what we will get
-		//1. Using bidletter and letters we have
-		//1.2 Count if it's 5-6 letters then continue, else return 0
-		//2. See if these word is in sevenWord, if not return 0
-		//2.1. determine points you will get in 7-letter word.
-		//3. Plus 50 points bonus into calculation
-		//4. determine how much bids we have played so far.
-		//5. Calculate how much point we have left for bidding and not going to lose point in the end.
-		//6. Get percentage value of that letter.
-		//7. Bid
-		
-		ArrayList<Character> determiningLetter = new ArrayList<Character>();
-		for(int i = 0; i<letters.size();i++){
-			
-			determiningLetter.add(letters.get(i));
-			
-		}
-		determiningLetter.add(bidLetter.getAlphabet());
-		//1.2 Count if it's 5-6 letters then continue, else return 0
-		if(determiningLetter.size()<5)
+		if(letters.size()<6)
 			return 0;
 		else{
-			//2. See if these word is in sevenWord, if not return 0.
-			//not all letters have to be in sevenWord			
-			//using Dan's percentage function.
-			/*
-			double currentPercent = getPercentage(sevenWord,letters,null);
-			
-			have7 = false;
-			
-			if(currentPercent==1){
-				
-				have7 = true;
-				
-			}
-			*/
-			
 			double percent = getPercentage(sevenWord,letters,bidLetter);
-			
 			if(percent == 1)
 			{
 				seventh = bidLetter.getAlphabet();
 			}
-			
 			if(percent<(6.0/7.0)){
 				
 				return 0;
 				
 			}
-			
 			else if(!have7){
 				
 				//use getWordScore to calculate word score
@@ -209,17 +171,16 @@ public class BidBuilder {
 				//6. Get percentage value of that letter base on whole word value and point left.
 				//7. Bid
 				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
-				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50-bidLetterScore;
+				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50;
 				double bidMultiplier = bidLetterScore/missingLetterScore;
 				
 				if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
-					
-					int x = (int)bidMultiplier*points;
-					if( (x > 18) && (percent < 1))
-						return 10;
-					else if (x > 18)
-						return 16;
-					else
+					int x = (int)bidMultiplier*pointsLeft;
+//					if( (x > 18) && (percent < 1))
+//						return 10;
+//					else if (x > 18)
+//						return 16;
+//					else
 						return x;
 					
 				}else{
@@ -362,43 +323,6 @@ public class BidBuilder {
 	{
 		l.debug("MADE SEVEN!!!");
 		return 1;
-		/*double currentPercent = getPercentage(sevenWord,letters,null);
-		int pointsLeft = getPointLeft(bidLetter,letters, cachedBids, sevenWord, currentPoint,ourID);
-		int points = ScrabbleValues.getWordScore(sevenWord.word);
-		
-		if(currentPercent==1){
-			
-			return 1;
-			
-		}else if (currentPercent<(6.0/7.0)){
-			
-			
-			//if(pointsLeft<=points){
-				
-				return 1;
-				
-			}else{
-				
-				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
-				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50-bidLetterScore;
-				double bidMultiplier = bidLetterScore/missingLetterScore;
-				
-				if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
-					
-					return (int)bidMultiplier*pointsLeft;
-					
-				}else{
-					
-					return 0;
-					
-				}
-				
-			}
-		}else{
-			
-			return 0;
-			
-		}*/
 	}
 	
 
