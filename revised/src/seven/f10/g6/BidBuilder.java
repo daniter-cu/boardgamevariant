@@ -26,6 +26,7 @@ public class BidBuilder {
 	private ArrayList<Character> seventh;
 	private int failTime=-1;
 	private boolean reachedSeven = false;
+	private int current7WordScore = 0;
 	static {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(org.apache.log4j.Level.DEBUG);
@@ -49,6 +50,7 @@ public class BidBuilder {
 		failTime=-1;
 		seventh.clear();
 		reachedSeven = false;
+		current7WordScore = 0;
 	}
 	
 	public void wonletter(Letter let)
@@ -159,8 +161,13 @@ public class BidBuilder {
 	{
 		if(letters.size()<5)
 			return 0;
-		if((getPercentage(sevenWord,letters,null)==1)||have7){
+		if(getPercentage(sevenWord,letters,null)==1){
 			have7 = true;
+		}
+		if(have7&&(getPercentage(sevenWord,letters,bidLetter)==(6.0/7.0))){
+			if(current7WordScore<ScrabbleValues.getWordScore(sevenWord.word)){
+				current7WordScore = ScrabbleValues.getWordScore(sevenWord.word);
+			}
 			return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 		}
 		if(getPercentage(sevenWord,letters,null)==(6.0/7.0)){
@@ -311,7 +318,11 @@ public class BidBuilder {
 	public int have7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
-		return 1;
+		int wordScore = ScrabbleValues.getWordScore(sevenWord.word);
+		if(wordScore>current7WordScore){
+			return -(wordScore-current7WordScore);
+		}
+		return 0;
 	}
 	
 
