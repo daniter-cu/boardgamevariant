@@ -117,10 +117,14 @@ public class BidBuilder {
 			{	
 				int b = make7(bidLetter, letters, cb, w, cp, id);
 				//if near 7, bid return val
-				if(b > altbid && altbid >= 0)
+				if(b > altbid && altbid >= 0){
+					l.debug("Make7 : " + b);
 					altbid = b;
-				if(b < 0 && b < altbid)
+				}
+				if(b < 0 && b < altbid){
+					l.debug("have7 : " + b);
 					altbid = b;
+				}
 			}
 	
 			//get percentage
@@ -164,12 +168,12 @@ public class BidBuilder {
 		if(letters.size()<5)
 			return 0;
 		if(getPercentage(sevenWord,letters,null)==1){
-			have7 = true;
-		}
-		if(have7&&(getPercentage(sevenWord,letters,bidLetter)==(6.0/7.0))){
 			if(current7WordScore<ScrabbleValues.getWordScore(sevenWord.word)){
 				current7WordScore = ScrabbleValues.getWordScore(sevenWord.word);
 			}
+			have7 = true;
+		}
+		if(have7&&(getPercentage(sevenWord,letters,bidLetter)==(6.0/7.0))){
 			return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 		}
 		if(getPercentage(sevenWord,letters,null)==(6.0/7.0)){
@@ -179,21 +183,22 @@ public class BidBuilder {
 		if(percent<(6.0/7.0)){
 			return 0;
 		}
-		if(
-				((percent==(6.0/7.0))&&(!reachedSeven))||
-				((percent==1)&&reachedSeven)
-				){
+		if(((percent==(6.0/7.0))&&(!reachedSeven))||((percent==1)&&reachedSeven)){
 			int points = ScrabbleValues.getWordScore(sevenWord.word);
 			int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 			double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
 			double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50;
 			double bidMultiplier = bidLetterScore/missingLetterScore;
+			if((bidMultiplier>0.5)&&(bidMultiplier<1)){
+				//happen when it's 6th letter only.
+				bidMultiplier = 1-bidMultiplier;
+			}
 			if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
 				int x = (int)(bidMultiplier*pointsLeft);
 				return x;
 			}else{
 				return 0;			
-			}	
+			}
 		}
 		return 0;
 	}
@@ -322,7 +327,10 @@ public class BidBuilder {
 	{
 		int wordScore = ScrabbleValues.getWordScore(sevenWord.word);
 		if(wordScore>current7WordScore){
-			return -(wordScore-current7WordScore);
+			int pointLeft = getPointLeft(bidLetter, letters, cachedBids, sevenWord, currentPoint,ourID);
+			int difference = wordScore-current7WordScore;
+			if(pointLeft>=difference)
+			return -difference;
 		}
 		return 0;
 	}
