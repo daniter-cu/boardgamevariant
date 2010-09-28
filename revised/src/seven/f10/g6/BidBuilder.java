@@ -23,7 +23,7 @@ public class BidBuilder {
 	private double value;
 	private double posval;
 	private boolean have7;
-	private char seventh;
+	private ArrayList<Character> seventh;
 	private int failTime=-1;
 	static {
 		BasicConfigurator.configure();
@@ -34,7 +34,7 @@ public class BidBuilder {
 	public BidBuilder()
 	{
 		//near7 = have7 = false;
-		
+		seventh = new ArrayList<Character>();
 		//no-op
 
 	}
@@ -46,7 +46,7 @@ public class BidBuilder {
 		value = 0;
 		have7 = false;
 		failTime=-1;
-		seventh = '\u0000';
+		seventh.clear();
 	}
 	
 	public void wonletter(Letter let)
@@ -55,8 +55,11 @@ public class BidBuilder {
 		//add code to check if we got our make 7er
 		//if(got a)
 		//	have7 = true;
-		if(let.getAlphabet() == seventh)
+		if(seventh.contains(let.getAlphabet()))
+		{
 			have7 = true;
+			l.debug("SEVENTH WORKS");
+		}
 	}
 	
 	public int bid(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl,
@@ -158,7 +161,7 @@ public class BidBuilder {
 			double percent = getPercentage(sevenWord,letters,bidLetter);
 			if(percent == 1)
 			{
-				seventh = bidLetter.getAlphabet();
+				seventh.add(bidLetter.getAlphabet());
 			}
 			if(percent<(6.0/7.0)){
 				
@@ -192,9 +195,7 @@ public class BidBuilder {
 				}
 				
 			}else{
-				l.debug("bid comes from have7()");
 				return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
-
 			}
 			
 		}
@@ -323,7 +324,6 @@ public class BidBuilder {
 	public int have7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
-		l.debug("MADE SEVEN!!!");
 		return 1;
 	}
 	
