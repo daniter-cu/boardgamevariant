@@ -345,35 +345,20 @@ public class BidBuilder {
 
 	//ArrayList<String> playernames = iocontroller.getPlayerList()
 	public int initialBid(Letter bidLetter)
-	{
-		if(value == 0){
-			int sum = 1;
-			int total = InitialPlayer.sevenletterwordlist.length;
-			failTime +=1;
+	{		
+			int[] bidPoints = {6, 5, 6, 5, 8, 5, 5, 6, 6, 9, 7, 5, 5, 5, 5, 5, 11, 6, 7, 5, 4, 5, 5, 9, 6, 11};
 
-			for(Word w: InitialPlayer.sevenletterwordlist)
-			{
-				int r= w.word.indexOf(bidLetter.getAlphabet());
-				if(r!= -1)
-				{	
-					sum++;
-				}
-			}
-			double FreqIn7 = (double)sum/total;
-			int bidPrice = (int)Math.ceil(FreqIn7*10 + bidLetter.getValue());
-			int playerNum = GameEngine.iocontroller.getPlayerList().size();
+			failTime +=1;
+			int playerNum = GameEngine.iocontroller.getPlayerList().size();//bug
 			if(failTime <= playerNum){
-				return (bidPrice);
+				int index= Integer.valueOf(bidLetter.getAlphabet());
+				index -= Integer.valueOf('A');
+				return (bidPoints[index]);
 			}else {
 				return (bidLetter.getValue()+7);
 			}
-			
-		}else {
-			return 0;
- 		}
 		
 	}
-
 
 }
 
