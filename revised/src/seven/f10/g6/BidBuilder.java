@@ -25,6 +25,7 @@ public class BidBuilder {
 	private boolean have7;
 	private ArrayList<Character> seventh;
 	private int failTime=-1;
+	private boolean reachedSeven = false;
 	static {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(org.apache.log4j.Level.DEBUG);
@@ -47,6 +48,7 @@ public class BidBuilder {
 		have7 = false;
 		failTime=-1;
 		seventh.clear();
+		reachedSeven = false;
 	}
 	
 	public void wonletter(Letter let)
@@ -155,51 +157,36 @@ public class BidBuilder {
 	private int make7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
-		if(letters.size()<6)
+		if(letters.size()<5)
 			return 0;
-		else{
-			double percent = getPercentage(sevenWord,letters,bidLetter);
-			if(percent == 1)
-			{
-				seventh.add(bidLetter.getAlphabet());
-			}
-			if(percent<(6.0/7.0)){
-				
-				return 0;
-				
-			}
-			else if(!have7){
-				
-				//use getWordScore to calculate word score
-				int points = ScrabbleValues.getWordScore(sevenWord.word);
-				int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
-				//6. Get percentage value of that letter base on whole word value and point left.
-				//7. Bid
-				double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
-				double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50;
-				double bidMultiplier = bidLetterScore/missingLetterScore;
-				
-				if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
-					int x = (int)(bidMultiplier*pointsLeft);
-//					if( (x > 18) && (percent < 1))
-//						return 10;
-//					else if (x > 18)
-//						return 16;
-//					else
-						return x;
-					
-				}else{
-					
-					return 0;
-					
-				}
-				
-			}else{
-				return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
-			}
-			
+		if((getPercentage(sevenWord,letters,null)==1)||have7){
+			have7 = true;
+			return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 		}
-		
+		if(getPercentage(sevenWord,letters,null)==(6.0/7.0)){
+			reachedSeven = true;
+		}
+		double percent = getPercentage(sevenWord,letters,bidLetter);
+		if(percent<(6.0/7.0)){
+			return 0;
+		}
+		if(
+				((percent==(6.0/7.0))&&(!reachedSeven))||
+				((percent==1)&&reachedSeven)
+				){
+			int points = ScrabbleValues.getWordScore(sevenWord.word);
+			int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
+			double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
+			double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50;
+			double bidMultiplier = bidLetterScore/missingLetterScore;
+			if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
+				int x = (int)(bidMultiplier*pointsLeft);
+				return x;
+			}else{
+				return 0;			
+			}	
+		}
+		return 0;
 	}
 
 	private int getPointLeft(Letter bidLetter, ArrayList<Character> letters, 
