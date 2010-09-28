@@ -19,6 +19,13 @@ import org.apache.log4j.Logger;
 
 public class InitialPlayer implements Player {
 
+	@Override
+	public void updateScores(ArrayList<Integer> scores) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 	static {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(org.apache.log4j.Level.ERROR);
