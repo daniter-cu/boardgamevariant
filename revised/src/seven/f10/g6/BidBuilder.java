@@ -38,7 +38,7 @@ public class BidBuilder {
 		//near7 = have7 = false;
 		seventh = new ArrayList<Character>();
 		//no-op
-
+		//simple comment
 	}
 	
 	
