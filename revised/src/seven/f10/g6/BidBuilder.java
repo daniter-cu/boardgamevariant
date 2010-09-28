@@ -38,7 +38,7 @@ public class BidBuilder {
 		//near7 = have7 = false;
 		seventh = new ArrayList<Character>();
 		//no-op
-		//simple comment
+		
 	}
 	
 	
@@ -117,7 +117,9 @@ public class BidBuilder {
 			{	
 				int b = make7(bidLetter, letters, cb, w, cp, id);
 				//if near 7, bid return val
-				if(b > altbid)
+				if(b > altbid && altbid >= 0)
+					altbid = b;
+				if(b < 0 && b < altbid)
 					altbid = b;
 			}
 	
@@ -137,7 +139,7 @@ public class BidBuilder {
 		posval = sum;
 		
 		if(altbid != 0)
-			return altbid;
+			return Math.abs(altbid);
 		
 		if (value != 0)
 		{
@@ -332,7 +334,6 @@ public class BidBuilder {
 		if(value == 0){
 			int sum = 1;
 			int total = InitialPlayer.sevenletterwordlist.length;
-			l.debug(total);
 			failTime +=1;
 
 			for(Word w: InitialPlayer.sevenletterwordlist)
@@ -343,13 +344,9 @@ public class BidBuilder {
 					sum++;
 				}
 			}
-			l.debug(sum);
 			double FreqIn7 = (double)sum/total;
-			l.debug(FreqIn7);
 			int bidPrice = (int)Math.ceil(FreqIn7*10 + bidLetter.getValue());
 			int playerNum = GameEngine.iocontroller.getPlayerList().size();
-			l.debug("playerNum: "+playerNum);
-			l.debug("failTime: "+failTime);
 			if(failTime <= playerNum){
 				return (bidPrice);
 			}else {
