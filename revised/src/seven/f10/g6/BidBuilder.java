@@ -195,6 +195,13 @@ public class BidBuilder {
 			}
 			if((pointsLeft>0)&&(pointsLeft<=currentPoint)){
 				int x = (int)(bidMultiplier*pointsLeft);
+				//add ceiling
+				if((percent==(6.0/7.0))&&(x>15)){
+					return 15;
+				}
+				if((percent==1)&&(x>20)){
+					return 20;
+				}
 				return x;
 			}else{
 				return 0;			
@@ -202,7 +209,7 @@ public class BidBuilder {
 		}
 		return 0;
 	}
-
+	
 	private int getPointLeft(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID){
 		
