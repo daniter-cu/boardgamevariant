@@ -1,4 +1,12 @@
+seven.g0.StingyPlayer
+seven.g0.LessStingyPlayer
+seven.f10.g1.players.NaivePlayer
+seven.f10.g3.OurPlayer
+seven.f10.g4.G4Player
+seven.f10.g5.Ninja
 seven.f10.g6.InitialPlayer
+seven.f10.g7.ClassyPlayer
+seven.f10.g9.BiddingPlayer
 seven.g1.G1Player
 seven.g2.SuperPlayer2
 seven.g2.OtherSuperPlayer2
