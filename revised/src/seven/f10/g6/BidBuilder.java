@@ -66,26 +66,10 @@ public class BidBuilder {
 		}
 	}
 	
-	public int bid(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl,
+	public int bid(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, 
 			ArrayList<PlayerBids> cachedBids,int currentPoint, int ourID)
 	{
-		l.debug("Value : " + value);
-		/*
-		//bid zero if we have 7.
-		if(have7)
-			return 0;
-		else if (near7){
-			
-			//Dummy word
-			Word sevenWord = new Word("Dummyyy");
-			return make7(bidLetter, letters, cachedBids, sevenWord, currentPoint,ourID);
-			
-		}
-
-		else 
-			return distance( bidLetter, letters, wordlist, slwl);
-			*/
-		return distance( bidLetter, letters, wordlist, slwl, cachedBids, currentPoint, ourID);
+		return distance( bidLetter, letters, wordlist, cachedBids, currentPoint, ourID);
 	}
 	
 	public void setHidden( ArrayList<Character> letters, Word[] wordlist)
@@ -102,7 +86,7 @@ public class BidBuilder {
 		value = sum;		
 	}
 	
-	private int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, Word[] slwl, ArrayList<PlayerBids> cb,
+	private int distance(Letter bidLetter, ArrayList<Character> letters, Word[] wordlist, ArrayList<PlayerBids> cb,
 			int cp, int id)
 	{
 		
@@ -346,7 +330,8 @@ public class BidBuilder {
 	//ArrayList<String> playernames = iocontroller.getPlayerList()
 	public int initialBid(Letter bidLetter)
 	{		
-			int[] bidPoints = {6, 5, 6, 5, 8, 5, 5, 6, 6, 9, 7, 5, 5, 5, 5, 5, 11, 6, 7, 5, 4, 5, 5, 9, 6, 11};
+		//                    {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z } 
+			int[] bidPoints = {6, 3, 4, 4, 8, 2, 4, 3, 6, 2, 3, 5, 3, 5, 5, 3, 2, 6, 7, 5, 4, 2, 2, 2, 3, 2};
 
 			failTime +=1;
 			int playerNum = GameEngine.iocontroller.getPlayerList().size();//bug
