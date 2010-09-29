@@ -27,6 +27,7 @@ public class BidBuilder {
 	private int failTime=-1;
 	private boolean reachedSeven = false;
 	private int current7WordScore = 0;
+	private static final int[] bidPoints = {6, 3, 4, 4, 8, 2, 4, 3, 6, 2, 3, 5, 3, 5, 5, 3, 2, 6, 7, 5, 4, 2, 2, 2, 3, 2};
 	static {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(org.apache.log4j.Level.DEBUG);
@@ -38,7 +39,6 @@ public class BidBuilder {
 		//near7 = have7 = false;
 		seventh = new ArrayList<Character>();
 		//no-op
-		
 	}
 	
 	
@@ -101,14 +101,18 @@ public class BidBuilder {
 			{	
 				int b = make7(bidLetter, letters, cb, w, cp, id);
 				//if near 7, bid return val
-				if(b > altbid && altbid >= 0){
+				/*if(b > altbid && altbid >= 0){
 					l.debug("Make7 : " + b);
 					altbid = b;
 				}
 				if(b < 0 && b < altbid){
 					l.debug("have7 : " + b);
 					altbid = b;
-				}
+				}*/
+				if(b > altbid && !have7)
+					altbid = b;
+				if(b < altbid && have7)
+					altbid = b;
 			}
 	
 			//get percentage
@@ -116,6 +120,8 @@ public class BidBuilder {
 			double prct = getPercentage(w, letters, bidLetter);
 			sum += prct;
 		}
+		if(have7)
+			l.debug("Player " + id + "Has 7!");
 		
 		//get % difference
 		double pdiff;
@@ -126,7 +132,7 @@ public class BidBuilder {
 		//multiply sum by 10
 		posval = sum;
 		
-		if(altbid != 0)
+		if(altbid != 0 || have7)
 			return Math.abs(altbid);
 		
 		if (value != 0)
@@ -149,6 +155,7 @@ public class BidBuilder {
 	private int make7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
+		
 		if(letters.size()<5)
 			return 0;
 		if(getPercentage(sevenWord,letters,null)==1){
@@ -157,22 +164,56 @@ public class BidBuilder {
 			}
 			have7 = true;
 		}
-		if(have7&&(getPercentage(sevenWord,letters,bidLetter)==(6.0/7.0))){
-			return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
+		double percent=getPercentage(sevenWord,letters,bidLetter);
+		if(have7 == true)
+		{
+			if(percent == 1)
+				return have7(bidLetter, letters, cachedBids, sevenWord, currentPoint, ourID);
+			else
+				return 0;
+		}
+		
+		if(have7&&(percent==(6.0/7.0))){
+			//return have7(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
+			return 0;
 		}
 		if(getPercentage(sevenWord,letters,null)==(6.0/7.0)){
 			reachedSeven = true;
 		}
-		double percent = getPercentage(sevenWord,letters,bidLetter);
+		//percent = getPercentage(sevenWord,letters,bidLetter);
 		if(percent<(6.0/7.0)){
 			return 0;
 		}
+		int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
+		if(percent == (6.0/7.0))
+		{
+			int index= Integer.valueOf(bidLetter.getAlphabet());
+			index -= Integer.valueOf('A');
+			return bidPoints[index]*2;
+		}
+		
+		if (percent > (6.0/7.0))
+		{
+			int index= Integer.valueOf(bidLetter.getAlphabet());
+			index -= Integer.valueOf('A');
+			int bid =(int) Math.round(bidPoints[index]*2.5);
+			if(bidPoints[index] == 2)
+				return 9;
+			if(bidPoints[index] == 3)
+				return 10;
+			if(bidPoints[index] == 4)
+				return 12;
+			
+			return bid;
+		}
+		/*
 		if(((percent==(6.0/7.0))&&(!reachedSeven))||((percent==1)&&reachedSeven)){
 			int points = ScrabbleValues.getWordScore(sevenWord.word);
 			int pointsLeft = getPointLeft(bidLetter,letters, cachedBids,sevenWord,currentPoint,ourID);
 			double bidLetterScore = ScrabbleValues.letterScore(bidLetter.getAlphabet());
 			double missingLetterScore = points-getScoreFromCurrentLetter(sevenWord,letters)-50;
 			double bidMultiplier = bidLetterScore/missingLetterScore;
+			l.debug("BID MULTIPLIER: " + bidMultiplier);
 			if((bidMultiplier>0.5)&&(bidMultiplier<1)){
 				//happen when it's 6th letter only.
 				bidMultiplier = 1-bidMultiplier;
@@ -190,7 +231,7 @@ public class BidBuilder {
 			}else{
 				return 0;			
 			}
-		}
+		}*/
 		return 0;
 	}
 	
@@ -206,13 +247,13 @@ public class BidBuilder {
 			if (ourID == cachedBids.get(i).getWinnerID()) {
 				secondHighBid = 0;
 				for(int j = 0;j<cachedBids.get(i).getBidvalues().size();j++){
-					if(secondHighBid<cachedBids.get(i).getBidvalues().get(j)){
+					if(secondHighBid<cachedBids.get(i).getBidvalues().get(j) && j!= ourID){
 						secondHighBid = cachedBids.get(i).getBidvalues().get(j);
 					}
 				}
 				
 				pointPlayed += secondHighBid;
-				
+
 			}
 			
 		}
@@ -316,10 +357,13 @@ public class BidBuilder {
 	public int have7(Letter bidLetter, ArrayList<Character> letters, 
 			ArrayList<PlayerBids> cachedBids, Word sevenWord, int currentPoint,int ourID)
 	{
+		//if(have7)
+		//	return 0;
 		int wordScore = ScrabbleValues.getWordScore(sevenWord.word);
 		if(wordScore>current7WordScore){
 			int pointLeft = getPointLeft(bidLetter, letters, cachedBids, sevenWord, currentPoint,ourID);
 			int difference = wordScore-current7WordScore;
+			l.debug("wordscore: " + wordScore + " current7word "+ current7WordScore + " diff: " +difference );
 			if(pointLeft>=difference)
 			return -difference;
 		}
@@ -331,7 +375,7 @@ public class BidBuilder {
 	public int initialBid(Letter bidLetter)
 	{		
 		//                    {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z } 
-			int[] bidPoints = {6, 3, 4, 4, 8, 2, 4, 3, 6, 2, 3, 5, 3, 5, 5, 3, 2, 6, 7, 5, 4, 2, 2, 2, 3, 2};
+			
 
 			failTime +=1;
 			int playerNum = GameEngine.iocontroller.getPlayerList().size();//bug
